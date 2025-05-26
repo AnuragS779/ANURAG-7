@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚔️ Villains vs Heroes: Battle Arena</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #0f0f0f, #000);
+      color: white;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(to right, crimson, darkred);
+      box-shadow: 0 0 20px red;
+    }
+    header h1 {
+      font-size: 48px;
+      margin: 0;
+      text-shadow: 2px 2px 5px black;
+    }
+    .arena {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 30px;
+    }
+    .fighter {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 2px solid crimson;
+      border-radius: 15px;
+      text-align: center;
+      width: 220px;
+      padding: 15px;
+      box-shadow: 0 0 10px crimson;
+      transition: transform 0.3s;
+      position: relative;
+    }
+    .fighter:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 20px crimson;
+    }
+    .fighter img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid white;
+      margin-bottom: 10px;
+    }
+    .fighter h3 {
+      margin: 0;
+      font-size: 20px;
+      color: crimson;
+    }
+    #battleBtn {
+      display: block;
+      margin: 40px auto 20px auto;
+      padding: 15px 40px;
+      font-size: 20px;
+      background-color: crimson;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    #battleBtn:hover {
+      background-color: darkred;
+      transform: scale(1.05);
+    }
+    #battleLog {
+      text-align: center;
+      font-size: 26px;
+      padding: 20px;
+      margin: 0 auto;
+      max-width: 800px;
+      background: rgba(255, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 0 20px red inset;
+    }
+    .blast {
+      position: absolute;
+      top: 40%;
+      left: 100%;
+      width: 80px;
+      height: 20px;
+      background: radial-gradient(circle, yellow, orange, red);
+      border-radius: 10px;
+      animation: shoot 1s forwards ease-out;
+      z-index: 10;
+    }
+    @keyframes shoot {
+      0% {
+        left: 100%;
+        opacity: 1;
+      }
+      100% {
+        left: 200%;
+        opacity: 0;
+        transform: scale(1.5) rotate(360deg);
+      }
+    }
+    audio {
+      display: none;
+    }
+    @media screen and (max-width: 768px) {
+      .fighter img {
+        height: 200px;
+      }
+      .fighter {
+        width: 150px;
+      }
+      header h1 {
+        font-size: 32px;
+      }
+      #battleLog {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚔️ VILLAINS VS HEROES BATTLE ARENA 💥</h1>
+  </header>
+
+  <button id="battleBtn">🔥 Fight Now!</button>
+
+  <div id="battleLog">Let the battle begin...</div>
+
+  <h2 style="text-align:center; margin-top:40px;">🛡️ HEROES 🛡️</h2>
+  <div class="arena" id="heroes">
+    <div class="fighter" id="Iron Man"><img src="img.iron.png" alt="Iron Man"><h3>Iron Man</h3></div>
+    <div class="fighter" id="Thor"><img src="Thor-Wallpaper.jpg" alt="Thor"><h3>Thor</h3></div>
+    <div class="fighter" id="Spider-Man"><img src="Spider-Man-Pictures.jpg" alt="Spider-Man"><h3>Spider-Man</h3></div>
+    <div class="fighter" id="Black Panther"><img src="blacl.png" alt="Black Panther"><h3>Black Panther</h3></div>
+    <div class="fighter" id="Captain America"><img src="captain.img" alt="Captain America"><h3>Captain America</h3></div>
+  </div>
+
+  <h2 style="text-align:center; margin-top:40px;">💀 VILLAINS 💀</h2>
+  <div class="arena" id="villains">
+    <div class="fighter" id="Thanos"><img src="thanos.jpg" alt="Thanos"><h3>Thanos</h3></div>
+    <div class="fighter" id="Joker"><img src="joker.jpg" alt="Joker"><h3>Joker</h3></div>
+    <div class="fighter" id="Ultron"><img src="ultron.jpg" alt="Ultron"><h3>Ultron</h3></div>
+    <div class="fighter" id="Green Goblin"><img src="goblin.jpg" alt="Green Goblin"><h3>Green Goblin</h3></div>
+    <div class="fighter" id="Loki"><img src="loki.jpg" alt="Loki"><h3>Loki</h3></div>
+  </div>
+
+  <audio autoplay loop>
+    <source src="battle-theme.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const heroes = ["Iron Man", "Thor", "Spider-Man", "Black Panther", "Captain America"];
+    const villains = ["Thanos", "Joker", "Ultron", "Green Goblin", "Loki"];
+    const log = document.getElementById("battleLog");
+    const btn = document.getElementById("battleBtn");
+
+    function shootBlast(fromId) {
+      const attacker = document.getElementById(fromId);
+      const blast = document.createElement("div");
+      blast.classList.add("blast");
+      attacker.appendChild(blast);
+      setTimeout(() => blast.remove(), 1000);
+    }
+
+    btn.addEventListener("click", () => {
+      const hero = heroes[Math.floor(Math.random() * heroes.length)];
+      const villain = villains[Math.floor(Math.random() * villains.length)];
+      const winnerIsHero = Math.random() > 0.5;
+      const result = winnerIsHero
+        ? `${hero} defeats ${villain}! 🛡️`
+        : `${villain} crushes ${hero}! 💀`;
+
+      log.innerHTML = `<strong>${result}</strong>`;
+      log.style.color = winnerIsHero ? "lime" : "red";
+
+      const attackerId = winnerIsHero ? hero : villain;
+      shootBlast(attackerId);
+    });
+  </script>
+
+</body>
+</html>
